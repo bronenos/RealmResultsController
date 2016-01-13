@@ -55,12 +55,7 @@ class RealmLogger {
     }
     
     func didUpdate<T: Object>(object: T) {
-        if let change = getChangeForObject(object, action: .Create) {
-            change.updateMirror()
-        }
-        else {
-            addObject(object, action: .Update)
-        }
+        addObject(object, action: .Update)
     }
     
     func didDelete<T: Object>(object: T) {
@@ -76,7 +71,7 @@ class RealmLogger {
     - parameter action Action that was performed on that object
     */
     func addObject<T: Object>(object: T, action: RealmAction) {
-        let realmChange = RealmChange(type: (object as Object).dynamicType, action: action, object: object)
+        let realmChange = RealmChange(type: (object as Object).dynamicType, action: action, mirror: object.getMirror())
         temporary.append(realmChange)
     }
     
@@ -84,20 +79,5 @@ class RealmLogger {
         temporary.removeAll()
     }
     
-    private func getChangeForObject<T: Object>(object: T, action: RealmAction) -> RealmChange? {
-        for change in temporary {
-            if change.action != action {
-                continue
-            }
-            
-            if change.object !== object {
-                continue
-            }
-            
-            return change
-        }
-        
-        return nil
-    }
 }
 

@@ -23,17 +23,11 @@ It is important to store a copy and not the real object to make it thread safe
 class RealmChange {
     var type: Object.Type
     var action: RealmAction
-    var object: Object?
     var mirror: Object?
     
-    init<T:Object>(type: T.Type, action: RealmAction, object: Object?) {
+    init<T:Object>(type: T.Type, action: RealmAction, mirror: Object?) {
         self.type = type
         self.action = action
-        self.object = object
-        updateMirror()
-    }
-    
-    func updateMirror() {
-        self.mirror = self.object?.getMirror()
+        self.mirror = mirror
     }
 }
